@@ -8,7 +8,7 @@ using namespace std;
 class Compare {
 public:
     bool operator()(pair<int, int> a, pair<int, int> b) {
-        return a.first < b.first;
+        return a.first > b.first;
     }
 };
 

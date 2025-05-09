@@ -1,11 +1,16 @@
-// need to fix
-
 #include <iostream>
 #include <vector>
-#include <stack>
+#include <queue>
 #include <climits>
 
 using namespace std;
+
+class Compare {
+public:
+    bool operator()(pair<int, int> a, pair<int, int> b) {
+        return a.first > b.first;
+    }
+};
 
 class Graph {
     vector<vector<vector<int>>> adj;
@@ -34,55 +39,35 @@ public:
         this->adj[u].push_back({ v, w });
     }
 
-    void dfs(stack<int>& s, vector<bool>& visited, int node) {
-        visited[node] = true;
-
-        for( vector<int> i : adj[node] ) {
-            int neighbour = i[0];
-            if( !visited[neighbour] ) {
-                dfs(s, visited, neighbour);
-            }
-        }
-
-        s.push(node);
-    }
-
-    stack<int> topologicalSort() {
-        vector<bool> visited(n);
-        stack<int> s;
-
-        for( int i = 0; i < n; i++ ) {
-            if( !visited[i] ) {
-                dfs(s, visited, i);
-            }
-        }
-
-        return s;
-    }
-
     int shortestPath(int src, int dist) {
 
-        // creating distance array
-        vector<int> distance;
-        for( int i = 0; i < n; i++ ) {
-            distance.push_back(INT_MAX);
-        }
+        vector<int> distance(n, INT_MAX);
 
+        priority_queue<pair<int, int>, vector<pair<int, int>>, Compare> pq;
         distance[src] = 0;
+        pq.push(make_pair(0, src));
 
-        stack<int> s = topologicalSort();
+        while( !pq.empty() ) {
+            pair<int, int> frontNode = pq.top();
+            pq.pop();
 
-        while( !s.empty() ) {
-            int top = s.top();
-            s.pop();
+            int d = frontNode.first;
+            int node = frontNode.second;
 
-            if( distance[top] != INT_MAX ) {
-                for( vector<int> i : adj[top] ) {
-                    int neighbour = i[0];
-                    int weight = i[1];
-                    if( distance[top] + weight < distance[neighbour] ) {
-                        distance[neighbour] = distance[top] + weight;
-                    }
+            // Skip if a shorter path has already been found love babber valu hai Ooo
+            if( d > distance[node] )
+                continue;
+
+            // If found the target node then return the cost
+            if( node == dist )
+                return d;
+
+            for( vector<int> i : adj[node] ) {
+                int neighbour = i[0];
+                int neighbourWeight = i[1];
+                if( distance[node] + neighbourWeight < distance[neighbour] ) {
+                    distance[neighbour] = distance[node] + neighbourWeight;
+                    pq.push(make_pair(distance[neighbour], neighbour));
                 }
             }
         }
