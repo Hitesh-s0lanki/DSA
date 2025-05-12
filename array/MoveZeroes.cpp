@@ -3,14 +3,14 @@
 
 using namespace std;
 
-void print( vector<int> nums ) {
+void print(vector<int> nums) {
     for( int num : nums ) {
         cout << num << "\t";
     }
     cout << endl;
 }
 
-void reverse( vector<int>& nums , int start , int end )
+void reverse(vector<int>& nums, int start, int end)
 {
     while( start <= end )
     {
@@ -22,37 +22,31 @@ void reverse( vector<int>& nums , int start , int end )
     }
 }
 
-void moveZeroes( vector<int>& nums ) {
+void moveZeroes(vector<int>& nums) {
 
     int n = nums.size();
 
-    if( n == 1 ) return;
-
-    // 2 pointer approach 
     int i = 0;
     int j = 1;
 
-    while( j < n ) {
+    while( i < n && j < n ) {
         if( nums[i] == 0 && nums[j] != 0 ) {
-            nums[i] = nums[j];
-            nums[j] = 0;
+            swap(nums[i], nums[j]);
             i++;
-            j++;
-        } else if( nums[i] != 0 && i + 1 != j ) {
+        } else if( nums[i] != 0 ) {
             i++;
-        } else {
-            j++;
         }
+        j++;
     }
 }
 
 int main() {
 
-    vector<int> nums = { 2, 1 };
+    vector<int> nums = { 4,2,4,0,0,3,0,5,1,0 };
 
-    moveZeroes( nums );
+    moveZeroes(nums);
 
-    print( nums );
+    print(nums);
 
     return 0;
 }

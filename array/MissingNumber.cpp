@@ -3,32 +3,19 @@
 
 using namespace std;
 
-void print(vector<int> nums) {
-    for( int num : nums ) {
-        cout << num << "\t";
-    }
-    cout << endl;
-}
-
-void reverse(vector<int>& nums, int start, int end)
-{
-    while( start <= end )
-    {
-        int temp = nums[start];
-        nums[start] = nums[end];
-        nums[end] = temp;
-        start++;
-        end--;
-    }
-}
-
 int missingNumber(vector<int>& nums) {
+    int ans = 0;
 
+    for( int i = 1; i <= nums.size(); i++ ) {
+        ans ^= nums[i - 1] ^ i;
+    }
+
+    return ans;
 }
 
 int main() {
 
-    vector<int> nums = { 2, 1 };
+    vector<int> nums = { 3,0,1 };
 
     cout << missingNumber(nums);
 
