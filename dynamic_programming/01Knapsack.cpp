@@ -58,8 +58,62 @@ int tabulation(vector<int> weight, vector<int> value, int n, int capacity) {
     // step1 : 
     vector<vector<int>> dp(n, vector<int>(capacity + 1, -1));
 
+    // step2: base case set
+    for( int w = weight[0]; w < capacity; w++ ) {
+        if( weight[0] <= capacity )
+            dp[0][w] = value[0];
+        else
+            dp[0][w] = 0;
+    }
+
+    for( int index = 1; index < n; index++ ) {
+        for( int w = 0; w <= capacity; w++ ) {
+            int include = 0;
+
+            if( weight[index] <= w )
+                include = value[index] + dp[index - 1][w - weight[index]];
+
+            int exclude = dp[index - 1][w];
+
+            dp[index][w] = max(include, exclude);
+        }
+    }
 
 
+    // print(dp);
+
+    return dp[n - 1][capacity];
+}
+
+
+int tabulationOptimize(vector<int> weight, vector<int> value, int n, int capacity) {
+
+    // step1 :
+    vector<int> curr(capacity + 1, -1);
+
+    // step2: base case set
+    for( int w = weight[0]; w < capacity; w++ ) {
+        if( weight[0] <= capacity )
+            curr[w] = value[0];
+        else
+            curr[w] = 0;
+    }
+
+    for( int index = 1; index < n; index++ ) {
+        for( int w = capacity; w >= 0; w-- ) {
+            int include = 0;
+
+            if( weight[index] <= w )
+                include = value[index] + curr[w - weight[index]];
+
+            int exclude = curr[w];
+
+            curr[w] = max(include, exclude);
+        }
+    }
+
+
+    return curr[capacity];
 }
 
 
@@ -75,8 +129,9 @@ int knapsack(vector<int> weight, vector<int> value, int n, int maxWeight) {
     // return ans;
 
     // using tabulation
+    // return tabulation(weight, value, n, maxWeight);
 
-
+    return tabulationOptimize(weight, value, n, maxWeight);
 }
 
 int main() {
