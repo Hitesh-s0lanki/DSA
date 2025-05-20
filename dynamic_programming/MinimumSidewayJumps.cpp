@@ -92,6 +92,34 @@ int tabulation(vector<int>& obstacles) {
     return min(dp[2][0], min(dp[1][0], dp[3][0]) + 1);
 }
 
+int tabulationSO(vector<int>& obstacles) {
+    int n = obstacles.size() - 1;
+
+    vector<int> curr(4, INT_MAX);
+    vector<int> next(4, 0);
+
+    for( int pos = n - 1; pos >= 0; pos-- ) {
+        for( int lane = 1; lane <= 3; lane++ ) {
+            if( obstacles[pos + 1] != lane ) {
+                curr[lane] = next[lane];
+            } else {
+                // changing the lane
+                int ans = 1e9;
+                for( int i = 1; i <= 3; i++ ) {
+                    if( i != lane && obstacles[pos] != i ) {
+                        ans = min(ans, next[i] + 1);
+                    }
+                }
+
+                curr[lane] = ans;
+            }
+        }
+        next = curr;
+    }
+
+    return min(curr[2], min(curr[1], curr[3]) + 1);
+}
+
 int minSideJumps(vector<int>& obstacles) {
 
     // using recursion
@@ -104,7 +132,9 @@ int minSideJumps(vector<int>& obstacles) {
     // return ans;
 
     // using tabulation
-    return tabulation(obstacles);
+    // return tabulation(obstacles);
+
+    return tabulationSO(obstacles);
 }
 
 int main() {
