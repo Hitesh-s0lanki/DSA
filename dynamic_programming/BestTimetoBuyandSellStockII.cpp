@@ -10,7 +10,7 @@ int recursion(vector<int>& prices, int index, int buy) {
     int profit = 0;
 
     if( buy ) {
-        profit = max((-prices[index]) + recursion(prices, index + 1, 0), recursion(prices, index + 1, 1));
+        profit = max((-prices[index] + recursion(prices, index + 1, 0)), recursion(prices, index + 1, 1));
     } else {
         profit = max((prices[index] + recursion(prices, index + 1, 1)), (0 + recursion(prices, index + 1, 0)));
     }
